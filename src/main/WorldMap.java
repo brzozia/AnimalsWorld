@@ -4,7 +4,7 @@ import java.util.*;
 
 
 
-public class WorldMap {
+public class WorldMap implements IPositionChangeObserver {
     int width;
     int height;
     int maxNoOfNoJungleGrass;
@@ -37,19 +37,30 @@ public class WorldMap {
 
     public void daySimulation(int moveEnergy, int startEnergy){
         for(Animal rat: animals ){              // removing dead animals
-            if(rat.getEnergy()<=0)
-                neverLandMap.delete(rat.getPosition(),rat);
+            if(rat.getEnergy()<=0) {
+                neverLandMap.delete(rat.getPosition(), rat);
+                animals.remove(rat);
+            }
         }
 
         for(Animal rat: animals ){
             rat.rotate();                       //changes orientation, moves and decreases energy
+            Vector2D newPosition=rat.getPosition().add(rat.getOrientation().toUniVector());
+            rat.positionChanged(newPosition,rat.getPosition());
+            positionChanged(newPosition, rat.getPosition());
             rat.move();
             rat.decreaseEnergy(moveEnergy);
-
         }
 
         for(Animal rat: animals ){             //eating grass
-            divideAndEat(rat);
+            if(objectAt(rat.getPosition()) instanceof Grass) {  //if animal stands at grass it can eat it
+                if(jungle.inJungle(rat.getPosition()))
+                    jungle.maxNoOfJungleGrass++;
+                else
+                    maxNoOfNoJungleGrass++;
+                divideAndEat(rat);
+
+            }
         }
 
                                                                                                 //reproduction
@@ -69,10 +80,12 @@ public class WorldMap {
                     Animal newBorn = rat1.reproduction(rat2,placeToBorn );
                     animals.add(newBorn);
                     neverLandMap.add(placeToBorn, newBorn);
-
+                    newBorn.addObserver(this);
                 }
             }
         }
+
+
             if(jungle.maxNoOfJungleGrass >0){
             addJungleGrass();               //add grass to jungle
             jungle.maxNoOfJungleGrass--;
@@ -109,7 +122,7 @@ public class WorldMap {
     public void divideAndEat(Animal rat){
         Vector2D animalPosition = rat.getPosition();
 
-        if(objectAt(animalPosition) instanceof Grass) {       //if animal stands on the grass
+               //if animal stands on the grass
 
             if (neverLandMap.size(animalPosition)!= 1 &&  neverLandMap.last(animalPosition).equals(rat) ) {     //if rat is the animal with the highest energy
                 SortedSet<Animal> equalRat=neverLandMap.tailSet(animalPosition,rat);    //set with animals with the same energy
@@ -132,7 +145,7 @@ public class WorldMap {
                 grassMap.remove(animalPosition);
             }
 
-        }
+
     }
 
 
@@ -143,6 +156,7 @@ public class WorldMap {
             if(!isOccupied(randomAnimal.getPosition())){
             animals.add(randomAnimal);
             neverLandMap.add(randomAnimal.getPosition(), randomAnimal);
+            randomAnimal.addObserver(this);
             i++;
             }
             else
@@ -189,5 +203,11 @@ public class WorldMap {
             return grassMap.get(pos);
         else
             return neverLandMap.get(pos); //returns null or animal
+    }
+
+    @Override
+    public void positionChanged(Vector2D newPosition, Vector2D oldPosition) {
+        neverLandMap.add(newPosition, (Animal) neverLandMap.get(oldPosition));
+        neverLandMap.delete(oldPosition, (Animal) neverLandMap.get(oldPosition));
     }
 }

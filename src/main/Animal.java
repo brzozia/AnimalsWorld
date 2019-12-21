@@ -1,6 +1,8 @@
 package main;
 
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 public class Animal {
     private Vector2D position;
@@ -8,6 +10,8 @@ public class Animal {
     private double energy; //determines days of animals' living
                             // double, because grassEnergy might be split between animals with the same amount of their own energy
     private int[] genotype;
+    protected List<IPositionChangeObserver> observers = new LinkedList<>();
+
 
 
 
@@ -133,8 +137,18 @@ public class Animal {
     }
 
 
+    public void addObserver(IPositionChangeObserver observer) {
+        observers.add(observer);
+    }
 
+   public void removeObserver(IPositionChangeObserver observer){
+        observers.remove(observer);
+    }
 
-
+    public void positionChanged(Vector2D newPosition, Vector2D oldPosition){
+        for(IPositionChangeObserver s: observers){
+            s.positionChanged(oldPosition, newPosition);
+        }
+    }
 
 }
