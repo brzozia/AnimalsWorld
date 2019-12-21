@@ -57,9 +57,6 @@ public class WorldMap implements IPositionChangeObserver {
 
         for(Animal rat: animals ){
             rat.rotate();                       //changes orientation, moves and decreases energy
-            Vector2D newPosition=rat.getPosition().add(rat.getOrientation().toUniVector());
-            rat.positionChanged(newPosition,rat.getPosition());
-            positionChanged(newPosition, rat.getPosition());
             rat.move();
             rat.decreaseEnergy(moveEnergy);
         }
@@ -223,8 +220,8 @@ public class WorldMap implements IPositionChangeObserver {
     }
 
     @Override
-    public void positionChanged(Vector2D newPosition, Vector2D oldPosition) {
-        neverLandMap.add(newPosition, (Animal) neverLandMap.get(oldPosition));
-        neverLandMap.delete(oldPosition, (Animal) neverLandMap.get(oldPosition));
+    public void positionChanged(Animal cow,Vector2D oldPosition, Vector2D newPosition) {
+        neverLandMap.add(newPosition, cow);
+        neverLandMap.delete(oldPosition, cow);
     }
 }

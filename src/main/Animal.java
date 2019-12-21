@@ -60,7 +60,10 @@ public class Animal {
     }
 
     public void move(){
-        this.position=position.add(orientation.toUniVector());
+        Vector2D newPosition =position.add(orientation.toUniVector());
+        positionChanged(newPosition, this.getPosition());
+        this.position=newPosition;
+
     }
 
     public void eatingGrass(double energy){
@@ -151,7 +154,7 @@ public class Animal {
 
     public void positionChanged(Vector2D newPosition, Vector2D oldPosition){
         for(IPositionChangeObserver s: observers){
-            s.positionChanged(oldPosition, newPosition);
+            s.positionChanged(this, oldPosition, newPosition);
         }
     }
 

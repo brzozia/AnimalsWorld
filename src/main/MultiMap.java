@@ -14,18 +14,26 @@ public class MultiMap<K, A> {
 
     public void add(K key, A val){
 
-        if(!map.containsKey(key)){
-            TreeSet<A> tree=new TreeSet<A>(c);
-            tree.add(val);
-            map.put(key, tree);
+        if(map.containsKey(key)) {
+            map.get(key).add(val); //get returns TreeSet, into which animal is added
+            System.out.println("add1: "+ map.get(key).add(val));
         }
         else {
-            map.get(key).add(val); //get returns TreeSet, into which animal is added ///czy get position zroci puste drzewo czy nie?
+            TreeSet<A> tree= new TreeSet<>(c);
+            tree.add(val);
+            map.put(key, tree);
+            System.out.println("add2222: "+ map.get(key).add(val));
+
         }
     }
 
-    public void delete(K key, A val){
-        map.get(key).remove(val);  //removes value from TreeSet
+    public void delete(K key, A val) throws NullPointerException {
+        try{
+            map.get(key).remove(val);
+        } //removes value from TreeSet
+        catch (NullPointerException ex){
+            System.out.println("dont cry" + ex);
+        }
 
         if(map.get(key).isEmpty())  //if that was last value in TreeSet removes key leading to that TreeSet
             map.remove(key);
