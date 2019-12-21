@@ -11,9 +11,6 @@ public class Animal {
 
 
 
-    public Vector2D getPosition(){
-        return this.position;
-    }
 
     public Animal(Vector2D position, Orientation orientation, double energy, int[] genotype) {
         this.position = position;
@@ -22,17 +19,40 @@ public class Animal {
         this.genotype = genotype;
     }
 
-    public void rotate(Animal rat){
+
+
+
+    public Vector2D getPosition(){
+        return this.position;
+    }
+
+    public double getEnergy() {
+        return this.energy;
+    }
+
+    public Orientation getOrientation() {
+        return this.orientation;
+    }
+
+    public void decreaseEnergy(int moveEnergy){
+        this.energy=this.energy-moveEnergy;
+
+    }
+    public void rotate(){
         int idRandRotate = (int)(Math.random()*31); //chooses index from 0 to 31 (from genotype)
         int numRandRotate = genotype[idRandRotate]; //chooses number of rotations from genotype
-        rat.changeOrientation(numRandRotate); // rotates animal
+        this.changeOrientation(numRandRotate); // rotates animal
     }
 
     public void changeOrientation(int rotate){ //changes orientation of animal when it knows how many times do this
         while(rotate>0){
-        orientation.next();
+        orientation=orientation.next();
         rotate--;
         }
+    }
+
+    public void move(){
+        this.position=position.add(orientation.toUniVector());
     }
 
     public void eatingGrass(Grass grass){
@@ -75,7 +95,7 @@ public class Animal {
 
     }
 
-    private int[] makeDirectionArrayCorrect (int newGenotype[]){ //check number of gens
+    private int[] makeDirectionArrayCorrect (int[] newGenotype){ //check number of gens
         int[] directionsInNewGenotype=new int[8];
         for(int i=0;i<8;i++){
             directionsInNewGenotype[i]=0;
@@ -89,7 +109,7 @@ public class Animal {
                 if(directionsInNewGenotype[k]==0){      //checks whether there are missing directions (in directionsInNewGenotype we can check how many directions are missed)
                 int randGen;
                 do {
-                    randGen = (int) Math.random() * 31; //finds gen to change from genotype;
+                    randGen = (int) (Math.random() * 31); //finds gen to change from genotype;
                 }
                 while(directionsInNewGenotype[randGen]<2); //if founded gen is the only gen of this type find another one
 
