@@ -1,3 +1,5 @@
+package main;
+
 public enum Orientation {
     NORTH,
     NORTHEAST,
@@ -28,6 +30,16 @@ public enum Orientation {
                 return NORTH;
         }
         return null;
+    }
+
+    public Orientation getRandom(){
+        int rotate=(int)Math.random()*8;
+
+        for(int i=0;i<rotate;i++)
+            this.next();
+
+        return this;
+
     }
 
 
