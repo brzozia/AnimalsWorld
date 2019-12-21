@@ -2,7 +2,7 @@ package main;
 
 public class Grass {
     private Vector2D position;
-    private int grassEnergy; //quantity of energy, which animal would get eating grass
+    private int grassEnergy=2; //quantity of energy, which animal would get eating grass
 
     public Grass(Vector2D position) {
         this.position = position;
@@ -16,5 +16,8 @@ public class Grass {
         return this.grassEnergy;
     }
 
+    public String toString(){
+        return "*";
+    }
 
 }

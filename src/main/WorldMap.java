@@ -22,9 +22,19 @@ public class WorldMap implements IPositionChangeObserver {
         this.maxNoOfNoJungleGrass =width*height;
     }
 
+    @Override
+    public String toString() {
+        MapVisualizer mapVis = new MapVisualizer(this);
+        return mapVis.draw(new Vector2D(0,0), new Vector2D(width-1,height-1));
+    }
+
+
 
     public void Life(int daysOfSimulation, int numberOfAnimals, int startEnergy, int moveEnergy){
+        System.out.println("lol");
+
         placeRandomAnimals(numberOfAnimals,startEnergy);
+        System.out.println("lol");
 
         for(int i=0;i<daysOfSimulation;i++){
             daySimulation(moveEnergy, startEnergy);
@@ -38,6 +48,7 @@ public class WorldMap implements IPositionChangeObserver {
     public void daySimulation(int moveEnergy, int startEnergy){
         for(Animal rat: animals ){              // removing dead animals
             if(rat.getEnergy()<=0) {
+
                 neverLandMap.delete(rat.getPosition(), rat);
                 animals.remove(rat);
             }
@@ -152,24 +163,34 @@ public class WorldMap implements IPositionChangeObserver {
     public void placeRandomAnimals(int numberOfAnimals, int startEnergy){   //to place Adam and Eva
         int i=0;
         while(i<numberOfAnimals){
-            Animal randomAnimal = randomAnimal(startEnergy,this.width,this.height);
+            System.out.println("lola");
+            Animal randomAnimal = randomAnimal(startEnergy);
+            System.out.println(randomAnimal.getPosition());
+
+
             if(!isOccupied(randomAnimal.getPosition())){
-            animals.add(randomAnimal);
+                System.out.println("lolaaaaaaaaaaaaa");
+
+                animals.add(randomAnimal);
             neverLandMap.add(randomAnimal.getPosition(), randomAnimal);
             randomAnimal.addObserver(this);
             i++;
+            System.out.println(randomAnimal.toString());
             }
-            else
-                i--;
+
         }
     }
 
-    public Animal randomAnimal(int startEnergy, int width, int height){ //to make Adam and Eva
+    public Animal randomAnimal(int startEnergy){ //to make Adam and Eva
         int[] genotype=new int[32];
         for(int i=0;i<32;i++)
-            genotype[i]=(int)(Math.random()*7);
+            genotype[i]=(int)(Math.random()*8);
+        Arrays.sort(genotype);
 
-        return new Animal(new Vector2D((int)(Math.random()*width),(int)(Math.random()*height)),Orientation.EAST.getRandom(),startEnergy, genotype);
+        System.out.println(Arrays.toString(genotype));
+
+
+        return new Animal(new Vector2D((int)(Math.random()*(this.width-1)),(int)(Math.random()*(this.height-1))),Orientation.EAST.getRandom(),startEnergy, genotype);
     }
 
     public void addJungleGrass(){
@@ -190,12 +211,12 @@ public class WorldMap implements IPositionChangeObserver {
     }
 
     public boolean isOccupied(Vector2D vec){    //checks if there is a grass or an animal on vec-position
-        if(grassMap.containsKey(vec))
+        if(grassMap.containsKey(vec)) {
+            System.out.println("trawa");
             return false;
-        else if(neverLandMap.containsKey(vec))
-            return false;
-        else
-            return true;
+
+        }
+        else return !neverLandMap.containsKey(vec);
     }
 
     public Object objectAt(Vector2D pos){

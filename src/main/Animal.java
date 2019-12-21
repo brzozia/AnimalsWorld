@@ -24,7 +24,9 @@ public class Animal {
     }
 
 
-
+    public String toString(){
+        return "pozycja:"+this.getPosition()+" orient: "+this.getOrientation()+" energia:"+this.energy+" genotype:"+ Arrays.toString(this.genotype);
+    }
 
     public Vector2D getPosition(){
         return this.position;

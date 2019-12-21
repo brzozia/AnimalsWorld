@@ -33,8 +33,11 @@ public class World {
 
             out.println("width is:"+ width + "  " + height +jungleRatio);
 
-            WorldMap Earth =new WorldMap(width, height, jungleRatio);
-            Earth.Life(daysOfSimulation,noOfAnimals,startEnergy,moveEnergy);
+
+
+            WorldMap earth =new WorldMap(width, height, jungleRatio);
+            earth.Life(daysOfSimulation,noOfAnimals,startEnergy,moveEnergy);
+            System.out.println(earth.toString());
 
         }
         catch(FileNotFoundException ex){
