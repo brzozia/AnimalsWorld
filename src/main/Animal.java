@@ -55,8 +55,15 @@ public class Animal {
         this.position=position.add(orientation.toUniVector());
     }
 
-    public void eatingGrass(Grass grass){
-        this.energy+=grass.getEnergy();
+    public void eatingGrass(double energy){
+        this.energy+=energy;
+    }
+
+    public boolean checkReproductionEnergy(int startEnergy){
+        if(this.energy<(startEnergy/2))
+            return false;
+        else
+            return true;
     }
 
     public Animal reproduction(Animal rat, Vector2D placeToBorn){ //new means that it is for a new born animals' child
@@ -65,6 +72,8 @@ public class Animal {
         newOrientation.getRandom(); //new super-random orientation
 
         double newEnergy=((1/4)*rat.energy)+((1/4)*this.energy);
+        this.energy-=1/4*this.energy;
+        rat.energy-=1/4*rat.energy;
 
         int[] newGenotype = crossingOverGens(rat);
 

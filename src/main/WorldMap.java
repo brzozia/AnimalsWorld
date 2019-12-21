@@ -27,12 +27,15 @@ public class WorldMap {
         placeRandomAnimals(numberOfAnimals,startEnergy);
 
         for(int i=0;i<daysOfSimulation;i++){
-            daySimulation(moveEnergy);
+            daySimulation(moveEnergy, startEnergy);
         }
 
     }
 
-    public void daySimulation(int moveEnergy){
+
+
+
+    public void daySimulation(int moveEnergy, int startEnergy){
         for(Animal rat: animals ){              // removing dead animals
             if(rat.getEnergy()<=0)
                 neverLandMap.delete(rat.getPosition(),rat);
@@ -45,15 +48,31 @@ public class WorldMap {
 
         }
 
-        for(Animal rat: animals ){
+        for(Animal rat: animals ){             //eating grass
+            divideAndEat(rat);
+        }
 
+                                                                                                //reproduction
+        for(Map.Entry<Vector2D, TreeSet<Animal>> entry: neverLandMap.entrySet() ){             //iterating through MultiMap
+            TreeSet<Animal> rats=entry.getValue();
+
+            Animal rat1;
+            Animal rat2;
+            if(rats.size()>1) {                                                     //finding the strongest pair sitting in one field
+                Iterator<Animal> itr = rats.descendingIterator();
+                rat1=itr.next(); //rats.last()
+                rat2=itr.next();
+
+                if(rat2.checkReproductionEnergy(startEnergy)) {                     //it is enough to check second rat, because they are sorted in Tree
+                    Vector2D placeToBorn=findPlaceToBorn(rat2.getPosition());
+
+                    Animal newBorn = rat1.reproduction(rat2,placeToBorn );
+                    animals.add(newBorn);
+                    neverLandMap.add(placeToBorn, newBorn);
+
+                }
             }
-
-
-
-
-
-
+        }
             if(jungle.maxNoOfJungleGrass >0){
             addJungleGrass();               //add grass to jungle
             jungle.maxNoOfJungleGrass--;
@@ -65,25 +84,56 @@ public class WorldMap {
 
     }
 
+
+    public Vector2D findPlaceToBorn(Vector2D position){
+        Vector2D place = position;
+        Orientation orient = Orientation.NORTH;
+
+        int i=0;
+        place.add(orient.toUniVector());
+        while(isOccupied(place) || i>7){
+            place.substract(orient.toUniVector());
+            orient=orient.next();
+            place.add(orient.toUniVector());
+            i++;
+        }
+        if(i==8){
+            place.substract(orient.toUniVector());
+            orient.getRandom();
+            place.add(orient.toUniVector());
+        }
+
+        return place;
+    }
+
     public void divideAndEat(Animal rat){
         Vector2D animalPosition = rat.getPosition();
 
         if(objectAt(animalPosition) instanceof Grass) {       //if animal stands on the grass
 
-            if (neverLandMap.size(animalPosition) == 1 || (neverLandMap.last(animalPosition)).equals(rat)  && ) {     //if its the only animal on this grass
-                rat.eatingGrass(grassMap.get(animalPosition));
+            if (neverLandMap.size(animalPosition)!= 1 &&  neverLandMap.last(animalPosition).equals(rat) ) {     //if rat is the animal with the highest energy
+                SortedSet<Animal> equalRat=neverLandMap.tailSet(animalPosition,rat);    //set with animals with the same energy
+                int noOfAnimalsOnGrass=equalRat.size();                                 // no of animals with the same energy - is it working? I dont know
+
+                if(noOfAnimalsOnGrass==1) {                                             //if he is the strongest one
+                    rat.eatingGrass(grassMap.get(animalPosition).getEnergy());
+                }
+                else{                                                                       // if he has equal strong friends
+                    double dividedEnergy= grassMap.get(animalPosition).getEnergy()/noOfAnimalsOnGrass;
+                    Iterator<Animal> itr= equalRat.iterator();
+                    while(itr.hasNext()) {
+                        itr.next().eatingGrass(dividedEnergy);
+                    }
+                }
                 grassMap.remove(animalPosition);
-            } else
+            }
+            else if(neverLandMap.size(animalPosition)== 1){
+                rat.eatingGrass(grassMap.get(animalPosition).getEnergy());
+                grassMap.remove(animalPosition);
+            }
+
         }
     }
-
-    public int noOfAnimalsOnGrass(Vector2D position) {
-        Iterator itr = neverLandMap.descendingIterator(position);
-        int number = 0;
-        while (itr.hasNext() && itr.next().>=itr) {
-        }
-    }
-
 
 
     public void placeRandomAnimals(int numberOfAnimals, int startEnergy){   //to place Adam and Eva
