@@ -3,17 +3,20 @@ package main;
 import java.util.*;
 
 public class MultiMap<K, A> {
-    private Comparator<A> Comparator;
+    private Comparator<A> c;
     protected Map<K, TreeSet<A>> map = new HashMap<>();
 
     public MultiMap(Comparator c) {
-        this.Comparator = c;
+        this.c = c;
     }
 
     public void add(K key, A val){
 
-        if(map.containsKey(key))
-            map.put(key, new TreeSet<A>(Comparator));
+        if(!map.containsKey(key)){
+            TreeSet<A> tree=new TreeSet<A>(c);
+            tree.add(val);
+            map.put(key, tree);
+        }
 
         map.get(key).add(val); //get returns TreeSet, into which animal is added ///czy get position zroci puste drzewo czy nie?
     }
@@ -34,11 +37,7 @@ public class MultiMap<K, A> {
         return map.get(key);
     }
     public int size(K key){
-        int size=0;
-        for(A val: map.get(key)){
-            size++;
-        }
-        return size;
+        return map.get(key).size();
     }
     public Object last(K key){
         return map.get(key).last();

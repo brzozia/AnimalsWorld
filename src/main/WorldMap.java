@@ -8,8 +8,8 @@ public class WorldMap implements IPositionChangeObserver {
     int width;
     int height;
     int maxNoOfNoJungleGrass;
-    protected Jungle jungle;                //contains dimensions of jungle
-    protected MultiMap<Vector2D, Animal> neverLandMap = new MultiMap<Vector2D, Animal>(Comparator.comparingDouble((Animal x) -> x.getEnergy()));    //makes a MultiMap where keys are type Vector2D, and values are Animals and gives a comparator, which compares Animals (values) using Animals' energy
+    protected Jungle jungle;               //contains dimensions of jungle
+    protected MultiMap<Vector2D, Animal> neverLandMap = new MultiMap<Vector2D, Animal>(Comparator.comparingDouble((Animal x)->x.getEnergy()));    //makes a MultiMap where keys are type Vector2D, and values are Animals and gives a comparator, which compares Animals (values) using Animals' energy
                                                                                                                                                     // neverLand in the name of my world, because I don't want to name my world 'myWorld' or 'wholeWorld' or anything else
     protected List<Animal> animals = new LinkedList<>();
     protected Map<Vector2D, Grass> grassMap = new HashMap<>();
@@ -31,18 +31,15 @@ public class WorldMap implements IPositionChangeObserver {
 
 
     public void Life(int daysOfSimulation, int numberOfAnimals, int startEnergy, int moveEnergy){
-        System.out.println("lol");
 
         placeRandomAnimals(numberOfAnimals,startEnergy);
-        System.out.println("lol");
 
         for(int i=0;i<daysOfSimulation;i++){
+            System.out.println("today is day: "+i);
             daySimulation(moveEnergy, startEnergy);
         }
 
     }
-
-
 
 
     public void daySimulation(int moveEnergy, int startEnergy){
@@ -57,8 +54,8 @@ public class WorldMap implements IPositionChangeObserver {
         for(Animal rat: animals ){
             rat.rotate();                       //changes orientation, moves and decreases energy
             Vector2D newPosition=rat.getPosition().add(rat.getOrientation().toUniVector());
-            rat.positionChanged(newPosition,rat.getPosition());
-            positionChanged(newPosition, rat.getPosition());
+            //rat.positionChanged(newPosition,rat.getPosition());
+            //positionChanged(newPosition, rat.getPosition());
             rat.move();
             rat.decreaseEnergy(moveEnergy);
         }
@@ -113,15 +110,15 @@ public class WorldMap implements IPositionChangeObserver {
         Vector2D place = position;
         Orientation orient = Orientation.NORTH;
 
-        int i=0;
+        int i;
         place.add(orient.toUniVector());
-        while(isOccupied(place) || i>7){
+        for(i=0;i<7 || isOccupied(place);i++){
             place.substract(orient.toUniVector());
             orient=orient.next();
             place.add(orient.toUniVector());
             i++;
         }
-        if(i==8){
+        if(i>=8){
             place.substract(orient.toUniVector());
             orient.getRandom();
             place.add(orient.toUniVector());
@@ -163,13 +160,9 @@ public class WorldMap implements IPositionChangeObserver {
     public void placeRandomAnimals(int numberOfAnimals, int startEnergy){   //to place Adam and Eva
         int i=0;
         while(i<numberOfAnimals){
-            System.out.println("lola");
             Animal randomAnimal = randomAnimal(startEnergy);
-            System.out.println(randomAnimal.getPosition());
-
 
             if(!isOccupied(randomAnimal.getPosition())){
-                System.out.println("lolaaaaaaaaaaaaa");
 
                 animals.add(randomAnimal);
             neverLandMap.add(randomAnimal.getPosition(), randomAnimal);
@@ -185,10 +178,6 @@ public class WorldMap implements IPositionChangeObserver {
         int[] genotype=new int[32];
         for(int i=0;i<32;i++)
             genotype[i]=(int)(Math.random()*8);
-        Arrays.sort(genotype);
-
-        System.out.println(Arrays.toString(genotype));
-
 
         return new Animal(new Vector2D((int)(Math.random()*(this.width-1)),(int)(Math.random()*(this.height-1))),Orientation.EAST.getRandom(),startEnergy, genotype);
     }
@@ -214,9 +203,8 @@ public class WorldMap implements IPositionChangeObserver {
         if(grassMap.containsKey(vec)) {
             System.out.println("trawa");
             return false;
-
         }
-        else return !neverLandMap.containsKey(vec);
+        else return neverLandMap.containsKey(vec);
     }
 
     public Object objectAt(Vector2D pos){
