@@ -10,6 +10,8 @@ public class MultiMap<K, A> {
         this.c = c;
     }
 
+
+
     public void add(K key, A val){
 
         if(!map.containsKey(key)){
@@ -17,8 +19,9 @@ public class MultiMap<K, A> {
             tree.add(val);
             map.put(key, tree);
         }
-
-        map.get(key).add(val); //get returns TreeSet, into which animal is added ///czy get position zroci puste drzewo czy nie?
+        else {
+            map.get(key).add(val); //get returns TreeSet, into which animal is added ///czy get position zroci puste drzewo czy nie?
+        }
     }
 
     public void delete(K key, A val){

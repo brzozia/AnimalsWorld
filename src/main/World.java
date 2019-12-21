@@ -31,8 +31,6 @@ public class World {
             int daysOfSimulation = ((Long) jsonObject.get("daysOfSimulation")).intValue();
             int noOfAnimals = ((Long) jsonObject.get("noOfAnimals")).intValue();
 
-            out.println("width is:"+ width + "  " + height +jungleRatio);
-
 
 
             WorldMap earth =new WorldMap(width, height, jungleRatio);

@@ -9,7 +9,7 @@ public class WorldMap implements IPositionChangeObserver {
     int height;
     int maxNoOfNoJungleGrass;
     protected Jungle jungle;               //contains dimensions of jungle
-    protected MultiMap<Vector2D, Animal> neverLandMap = new MultiMap<Vector2D, Animal>(Comparator.comparingDouble((Animal x)->x.getEnergy()));    //makes a MultiMap where keys are type Vector2D, and values are Animals and gives a comparator, which compares Animals (values) using Animals' energy
+    protected MultiMap<Vector2D, Animal> neverLandMap = new MultiMap<Vector2D, Animal>(Comparator.comparingDouble(Animal::getEnergy));    //makes a MultiMap where keys are type Vector2D, and values are Animals and gives a comparator, which compares Animals (values) using Animals' energy
                                                                                                                                                     // neverLand in the name of my world, because I don't want to name my world 'myWorld' or 'wholeWorld' or anything else
     protected List<Animal> animals = new LinkedList<>();
     protected Map<Vector2D, Grass> grassMap = new HashMap<>();
@@ -37,6 +37,10 @@ public class WorldMap implements IPositionChangeObserver {
         for(int i=0;i<daysOfSimulation;i++){
             System.out.println("today is day: "+i);
             daySimulation(moveEnergy, startEnergy);
+            System.out.println(neverLandMap.toString());
+            System.out.println(grassMap.toString());
+
+
         }
 
     }
@@ -54,8 +58,8 @@ public class WorldMap implements IPositionChangeObserver {
         for(Animal rat: animals ){
             rat.rotate();                       //changes orientation, moves and decreases energy
             Vector2D newPosition=rat.getPosition().add(rat.getOrientation().toUniVector());
-            //rat.positionChanged(newPosition,rat.getPosition());
-            //positionChanged(newPosition, rat.getPosition());
+            rat.positionChanged(newPosition,rat.getPosition());
+            positionChanged(newPosition, rat.getPosition());
             rat.move();
             rat.decreaseEnergy(moveEnergy);
         }
@@ -128,10 +132,14 @@ public class WorldMap implements IPositionChangeObserver {
     }
 
     public void divideAndEat(Animal rat){
+
         Vector2D animalPosition = rat.getPosition();
 
                //if animal stands on the grass
-
+        System.out.println("tu");
+        System.out.println(neverLandMap.get(animalPosition));
+                System.out.println("rozmiar:  "+neverLandMap.size(animalPosition));
+        System.out.println("czy tu");
             if (neverLandMap.size(animalPosition)!= 1 &&  neverLandMap.last(animalPosition).equals(rat) ) {     //if rat is the animal with the highest energy
                 SortedSet<Animal> equalRat=neverLandMap.tailSet(animalPosition,rat);    //set with animals with the same energy
                 int noOfAnimalsOnGrass=equalRat.size();                                 // no of animals with the same energy - is it working? I dont know
