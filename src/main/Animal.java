@@ -81,9 +81,9 @@ public class Animal {
         Orientation newOrientation = rat.orientation;
         newOrientation.getRandom(); //new super-random orientation
 
-        double newEnergy=((1/4)*rat.energy)+((1/4)*this.energy);
-        this.energy-=1/4*this.energy;
-        rat.energy-=1/4*rat.energy;
+        double newEnergy=(rat.energy/4)+(this.energy/4);
+        this.energy-=this.energy/4;
+        rat.energy-=rat.energy/4;
 
         int[] newGenotype = crossingOverGens(rat);
 

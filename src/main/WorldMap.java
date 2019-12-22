@@ -99,21 +99,29 @@ public class WorldMap implements IPositionChangeObserver {
         //-------------making new animals----------------
         for(Map.Entry<Vector2D, TreeSet<Animal>> entry: neverLandMap.entrySet() ){             //iterating through MultiMap
             TreeSet<Animal> rats=entry.getValue();
-System.out.println("sth"+rats);
+
             Animal rat1;
             Animal rat2;
             if(rats.size()>1) {                                                     //finding the strongest pair sitting in one field
                 Iterator<Animal> itr = rats.descendingIterator();
                 rat1=itr.next(); //rats.last()
                 rat2=itr.next();
+                System.out.println("rat1"+rat1.toStringAttributes());
+                System.out.println("rat2"+rat2.toStringAttributes());
+
+
+                System.out.println("energy"+rat2.checkReproductionEnergy(startEnergy));
 
                 if(rat2.checkReproductionEnergy(startEnergy)) {                     //it is enough to check second rat, because they are sorted in Tree
-                    Vector2D placeToBorn=findPlaceToBorn(rat2.getPosition());
+                    Vector2D placeToBorn=findPlaceToBorn(rat2);
+                    System.out.println("place to born"+placeToBorn);
 
                     Animal newBorn = rat1.reproduction(rat2,placeToBorn );
+                    System.out.println("newBorn"+newBorn.toStringAttributes());
                     animals.add(newBorn);
                     neverLandMap.add(placeToBorn, newBorn);
                     newBorn.addObserver(this);
+                    System.out.println("cool");
                 }
             }
         }
@@ -164,22 +172,26 @@ System.out.println("sth"+rats);
     }
 
 
-    public Vector2D findPlaceToBorn(Vector2D position){
-        Vector2D place = position;
-        Orientation orient = Orientation.NORTH;
+    public Vector2D findPlaceToBorn(Animal rat ){
+        Vector2D place = rat.getPosition();
+        Orientation or = rat.getOrientation();
+        System.out.println("bornplace:"+place);
 
         int i;
-        place.add(orient.toUniVector());
-        for(i=0;i<7 || isOccupied(place);i++){
-            place.substract(orient.toUniVector());
-            orient=orient.next();
-            place.add(orient.toUniVector());
+        place=place.add(or.toUniVector());
+        System.out.println("bornplace:"+place);
+
+        for(i=0;i<7 && (objectAt(place) instanceof Animal)  ;i++){
+
+            place=place.substract(or.toUniVector());
+            or=or.next();
+            place=place.add(or.toUniVector());
             i++;
         }
         if(i>=8){
-            place.substract(orient.toUniVector());
-            orient.getRandom();
-            place.add(orient.toUniVector());
+            place=place.substract(or.toUniVector());
+            or.getRandom();
+            place=place.add(or.toUniVector());
         }
 
         return place;
