@@ -9,11 +9,12 @@ public class WorldMap implements IPositionChangeObserver {
     private int height;
     private int maxNoOfWorldGrass;
     private int grassEnergy;
+    private AnimalId animalId = new AnimalId();
     private Vector2D worldLeftDown=new Vector2D(0,0);
     private Vector2D worldRightUp;
     private Jungle jungle;               //contains dimensions of jungle
-    private Comparator compare =Comparator.comparingDouble(Animal::getEnergy);
-    private MultiMap<Vector2D, Animal> neverLandMap = new MultiMap<Vector2D, Animal>(this.compare);    //makes a MultiMap where keys are type Vector2D, and values are Animals and gives a comparator, which compares Animals (values) using Animals' energy
+    private Comparator compare =Comparator.comparingDouble(Animal::getComparingValue);
+    private MultiMap<Vector2D, Animal> neverLandMap = new MultiMap<>(this.compare);    //makes a MultiMap where keys are type Vector2D, and values are Animals and gives a comparator, which compares Animals (values) using Animals' energy
                                                                                                                                                     // neverLand in the name of my world, because I don't want to name my world 'myWorld' or 'wholeWorld' or anything else
     protected List<Animal> animals = new LinkedList<>();
     private Map<Vector2D, Grass> grassMap = new HashMap<>();
@@ -68,27 +69,26 @@ public class WorldMap implements IPositionChangeObserver {
             animals.remove(soonDead);
 
         }
-        //toKill.clear();
+        toKill.clear();
 
 
         //-----------------running and rotating-------------
-       // MultiMap<Vector2D, Animal > addMap = new MultiMap<>(this.compare);
+
+
         for(Animal rat: animals ){
-                System.out.println("przed zmianą: "+rat.getPosition());
                 rat.rotate();                                   //changes orientation, moves and decreases energy
+                rat.decreaseEnergy(moveEnergy);
                 move(rat);
-
-            rat.decreaseEnergy(moveEnergy);
         }
 
 
-        for(Animal rat: animals ){
-            if( !neverLandMap.contains(rat.getPosition(), rat)) {
-                neverLandMap.add(rat.getPosition(), rat);
-                System.out.println("------------------------------------------------------agh-------------------------------------------");
+
+            for (Animal rat : animals) {
+                if (!neverLandMap.contains(rat.getPosition(), rat)) {
+                    neverLandMap.add(rat.getPosition(), rat);
+                }
             }
-        }
-        System.out.println("end of moving");
+
 
         //----------------eating grass-------------------
         for(Animal rat: animals ){
@@ -100,11 +100,11 @@ public class WorldMap implements IPositionChangeObserver {
                 divideAndEat(rat);
             }
         }
-        System.out.println("end of moving");
 
 
         //-------------making new animals----------------
         List<Animal> newBorns = new ArrayList<>();
+
         for(Map.Entry<Vector2D, TreeSet<Animal>> entry: neverLandMap.entrySet() ){             //iterating through MultiMap
             TreeSet<Animal> rats=entry.getValue();
 
@@ -114,50 +114,41 @@ public class WorldMap implements IPositionChangeObserver {
                 Iterator<Animal> itr = rats.descendingIterator();
                 rat1=itr.next(); //rats.last()
                 rat2=itr.next();
-                System.out.println("rat1"+rat1.toStringAttributes());
-                System.out.println("rat2"+rat2.toStringAttributes());
-
-
-                System.out.println("energy"+rat2.checkReproductionEnergy(startEnergy));
 
                 if(rat2.checkReproductionEnergy(startEnergy)) {                     //it is enough to check second rat, because they are sorted in Tree
                     Vector2D placeToBorn=findPlaceToBorn(rat2);
 
-                    Animal newBorn = rat1.reproduction(rat2,placeToBorn );
+                    Animal newBorn = rat1.reproduction(rat2,placeToBorn, animalId.getId() );
                     newBorns.add(newBorn);
                 }
             }
         }
+
         for(Animal an: newBorns){
+
             animals.add(an);
             neverLandMap.add(an.getPosition(), an);
             an.addObserver(this);
 
         }
 
-        System.out.println("end of moving");
 
         //-------------------adding grass--------------------
-        System.out.println(jungle.maxNoOfJungleGrass);
-            if(jungle.getMaxNoOfJungleGrass() >0){
+            if(jungle.getMaxNoOfJungleGrass() >1){
             addJungleGrass();               //add grass to jungle
             jungle.setMaxNoOfJungleGrass(-1);
             }
-        System.out.println("end of grass1");
 
-        if (maxNoOfWorldGrass >0){
+        if (maxNoOfWorldGrass >1){
             addWorldGrass();               //add grass not to jungle
             maxNoOfWorldGrass--;
         }
-        System.out.println("end of grass2");
-
 
     }
 
     public void move(Animal rat){
         Vector2D newPosition =rat.getPosition().add(rat.getOrientation().toUniVector());
         wrapMap(newPosition);
-        System.out.println("po zmianie: "+newPosition);
 
         rat.positionChanged(rat.getPosition(),newPosition);
         rat.setPosition(newPosition);
@@ -246,12 +237,10 @@ public class WorldMap implements IPositionChangeObserver {
             Animal randomAnimal = randomAnimal(startEnergy);
 
             if(!isOccupied(randomAnimal.getPosition())){        //at first at map can by only animals
-
                 animals.add(randomAnimal);
                 neverLandMap.add(randomAnimal.getPosition(), randomAnimal);
                 randomAnimal.addObserver(this);
                 i++;
-                System.out.println(randomAnimal.toStringAttributes());
             }
 
         }
@@ -262,14 +251,13 @@ public class WorldMap implements IPositionChangeObserver {
         for(int i=0;i<32;i++)
             genotype[i]=(int)(Math.random()*8);
 
-        return new Animal(new Vector2D((int)(Math.random()*(this.width-1)),(int)(Math.random()*(this.height-1))),Orientation.EAST.getRandom(),startEnergy, genotype);
+        return new Animal(new Vector2D((int)(Math.random()*(this.width-1)),(int)(Math.random()*(this.height-1))),Orientation.EAST.getRandom(),startEnergy, genotype, animalId.getId());
     }
 
     public void addJungleGrass(){
         Vector2D randPos;
         do {
              randPos = new Vector2D((int) (jungle.leftDown.x + Math.random() * (jungle.rightUp.x - jungle.leftDown.x+1)), (int) (jungle.leftDown.y + Math.random() * (jungle.rightUp.y - jungle.leftDown.y+1)));
-        //System.out.println("grass"+randPos);
         }while(!(jungle.inJungle(randPos) && !isOccupied(randPos)));
 
         grassMap.put(randPos, new Grass(randPos, this.grassEnergy));

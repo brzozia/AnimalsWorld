@@ -16,41 +16,29 @@ public class MultiMap<K, A> {
 
         if(map.containsKey(key)) {
             map.get(key).add(val); //get returns TreeSet, into which animal is added
-            System.out.println("dodanie do istneijącego drzew"+map.get(key)+" "+map.get(key).last()+" "+key);
+
         }
         else {
             TreeSet<A> tree= new TreeSet<>(c);
             tree.add(val);
             map.put(key, tree);
-            System.out.println("dodanie noewgo drzew"+map.get(key)+" "+key);
-
         }
     }
 
     public void delete(K key, A val) throws NullPointerException {
-        //System.out.println(map.get(key)+"przed usunieciem mapa"+key);
-
         try{
             map.get(key).remove(val);
-            System.out.println("deleted key:"+ key);
 
         }                                                       //removes value from TreeSet
         catch (NullPointerException ex){
             System.out.println(ex + "there is no such animal in that place");
         }
-        //System.out.println(map.get(key)+"po usunieciu mapa"+key);
 
         if(map.get(key).isEmpty()) { //if that was last value in TreeSet removes key leading to that TreeSet
             map.remove(key);
-            System.out.println(("removed whole tree"+key));
         }
-
-
     }
 
-    public void putAll(Map<K,TreeSet<A>> addMap ){
-        map.putAll(addMap);
-    }
 
     public boolean containsKey(K key){
         return map.containsKey(key);
@@ -66,10 +54,6 @@ public class MultiMap<K, A> {
         return map.get(key).last();
     }
 
-    public Iterator<A> descendingIterator(K key){
-        return map.get(key).descendingIterator();
-    }
-
     public SortedSet<A>  tailSet(K key, A val){
         return map.get(key).tailSet(val);
     }
@@ -77,15 +61,26 @@ public class MultiMap<K, A> {
     public Set<Map.Entry<K, TreeSet<A>>> entrySet() {
         return map.entrySet();
     }
+
     public boolean contains(K key, A val){
-        System.out.println("chcecking key"+key);
         if(map.get(key) == null)
             return false;
-        if( !map.get(key).contains(val))
-            return false;
-        else
+        if( map.get(key).contains(val))
             return true;
+        else
+            return false;
     }
+
+//    public int wholeSize(){
+//        int size=0;
+//        for(Map.Entry<K, TreeSet <A>> entry : map.entrySet()){
+//            if(entry.getValue()!=null){
+//                size+=entry.getValue().size();
+//            }
+//        }
+//        return size;
+//
+//    }
 
 
 }

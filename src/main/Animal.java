@@ -11,22 +11,25 @@ public class Animal {
     private double energy; //determines days of animals' living
                             // double, because grassEnergy might be split between animals with the same amount of their own energy
     private int[] genotype;
+    private int id;
     protected List<IPositionChangeObserver> observers = new LinkedList<>();
 
 
 
 
 
-    public Animal(Vector2D position, Orientation orientation, double energy, int[] genotype) {
+    public Animal(Vector2D position, Orientation orientation, double energy, int[] genotype, int id) {
         this.position = position;
         this.orientation = orientation;
         this.energy = energy;
         this.genotype = genotype;
+        this.id=id;
+        id++;
     }
 
 
     public String toStringAttributes(){
-        return "pozycja:"+this.getPosition()+" orient: "+this.getOrientation()+" energia:"+this.energy+" genotype:"+ Arrays.toString(this.genotype);
+        return "id:"+id+"pozycja:"+this.getPosition()+" orient: "+this.getOrientation()+" energia:"+this.energy+" genotype:"+ Arrays.toString(this.genotype);
     }
 
     public String toString(){
@@ -75,7 +78,7 @@ public class Animal {
             return true;
     }
 
-    public Animal reproduction(Animal rat, Vector2D placeToBorn){ //new means that it is for a new born animals' child
+    public Animal reproduction(Animal rat, Vector2D placeToBorn, int newId){ //new means that it is for a new born animals' child
 
         Orientation newOrientation = rat.orientation;
         newOrientation.getRandom(); //new super-random orientation
@@ -86,7 +89,7 @@ public class Animal {
 
         int[] newGenotype = crossingOverGens(rat);
 
-        return new Animal(placeToBorn,newOrientation,newEnergy,newGenotype);
+        return new Animal(placeToBorn,newOrientation,newEnergy,newGenotype, newId );
 
     }
 
@@ -156,4 +159,7 @@ public class Animal {
         }
     }
 
+    public double getComparingValue(){
+        return this.energy+(double)this.id;
+    }
 }

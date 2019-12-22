@@ -12,11 +12,11 @@ import java.io.IOException;
 
 public class World {
 
-    public static void main(String[] args) throws IOException, ParseException {
+    public static void main(String[] args) throws IOException {
 
         JSONParser parser = new JSONParser();
 
-        try //(FileReader reader = new FileReader("src/assets/parameters.json"))
+        try
         {
             Object object = parser
                     .parse(new FileReader("src/assets/parameters.json"));
@@ -48,8 +48,6 @@ public class World {
             }
             System.out.println(earth.toString());
 
-//            earth.Life(daysOfSimulation,noOfAnimals,startEnergy,moveEnergy);
-//            System.out.println(earth.toString());
         }
         catch(FileNotFoundException ex){
             out.println( "File not found"); }
