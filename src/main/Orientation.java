@@ -63,7 +63,7 @@ public enum Orientation {
         Orientation orient=Orientation.SOUTHWEST;
 
         for(int i=0;i<rotate;i++)
-            orient=this.next();
+            orient=orient.next();
 
         return orient;
 

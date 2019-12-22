@@ -34,9 +34,24 @@ public class World {
 
 
             WorldMap earth =new WorldMap(width, height, jungleRatio);
-            earth.Life(daysOfSimulation,noOfAnimals,startEnergy,moveEnergy);
+
+            earth.placeRandomAnimals(noOfAnimals,startEnergy);
+
+            for(int i=0;i<daysOfSimulation;i++){
+
+                System.out.println("                        today is day: "+i);
+                earth.daySimulation(moveEnergy, startEnergy);
+                System.out.println(earth.toString());
+                for (Animal a : earth.animals) {
+                    out.println(a.toStringAttributes());
+                }
+                System.out.println(earth.grassMap.toString());
+
+            }
             System.out.println(earth.toString());
 
+//            earth.Life(daysOfSimulation,noOfAnimals,startEnergy,moveEnergy);
+//            System.out.println(earth.toString());
         }
         catch(FileNotFoundException ex){
             out.println( "File not found"); }

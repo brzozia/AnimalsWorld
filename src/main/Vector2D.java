@@ -1,8 +1,8 @@
 package main;
 
 public class Vector2D {
-    public final int x;
-    public final int y;
+    public int x;
+    public int y;
 
     public Vector2D(int x, int y){
         this.x = x;
@@ -10,7 +10,7 @@ public class Vector2D {
     }
 
     public String toString(){
-        return "x:"+this.x+" , y:"+this.y;
+        return "(x:"+this.x+" , y:"+this.y +")";
     }
     public boolean precedes(Vector2D other){
         return ((this.x <= other.x) && (this.y <= other.y));

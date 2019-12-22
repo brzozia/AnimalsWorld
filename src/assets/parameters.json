@@ -1,10 +1,10 @@
 {
-  "width": 15,
+  "width": 10,
   "height": 10,
   "startEnergy": 10,
   "moveEnergy": 1,
   "plantEnergy": 2,
   "jungleRatio": 3,
-  "daysOfSimulation": 10,
+  "daysOfSimulation": 15,
   "noOfAnimals": 5
 }

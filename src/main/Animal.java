@@ -26,13 +26,19 @@ public class Animal {
     }
 
 
-    public String toString(){
+    public String toStringAttributes(){
         return "pozycja:"+this.getPosition()+" orient: "+this.getOrientation()+" energia:"+this.energy+" genotype:"+ Arrays.toString(this.genotype);
+    }
+
+    public String toString(){
+        return "A";
     }
 
     public Vector2D getPosition(){
         return this.position;
     }
+
+    public void setPosition(Vector2D newPosition) { this.position=newPosition;}
 
     public double getEnergy() {
         return this.energy;
@@ -43,7 +49,7 @@ public class Animal {
     }
 
     public void decreaseEnergy(int moveEnergy){
-        this.energy=this.energy-moveEnergy;
+        this.energy-=moveEnergy;
 
     }
     public void rotate(){
@@ -57,13 +63,6 @@ public class Animal {
         orientation=orientation.next();
         rotate--;
         }
-    }
-
-    public void move(){
-        Vector2D newPosition =position.add(orientation.toUniVector());
-        positionChanged(newPosition, this.getPosition());
-        this.position=newPosition;
-
     }
 
     public void eatingGrass(double energy){
@@ -152,7 +151,7 @@ public class Animal {
         observers.remove(observer);
     }
 
-    public void positionChanged(Vector2D newPosition, Vector2D oldPosition){
+    public void positionChanged(Vector2D oldPosition, Vector2D newPosition){
         for(IPositionChangeObserver s: observers){
             s.positionChanged(this, oldPosition, newPosition);
         }
