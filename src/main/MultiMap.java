@@ -78,10 +78,13 @@ public class MultiMap<K, A> {
         return map.entrySet();
     }
     public boolean contains(K key, A val){
-        if(map.get(key) == null ||
-                !map.get(key).contains(val))
+        System.out.println("chcecking key"+key);
+        if(map.get(key) == null)
             return false;
-        else return true;
+        if( !map.get(key).contains(val))
+            return false;
+        else
+            return true;
     }
 
 

@@ -87,7 +87,8 @@ public class WorldMap implements IPositionChangeObserver {
                 neverLandMap.add(rat.getPosition(), rat);
                 System.out.println("------------------------------------------------------agh-------------------------------------------");
             }
-            }
+        }
+        System.out.println("end of moving");
 
         //----------------eating grass-------------------
         for(Animal rat: animals ){
@@ -97,9 +98,9 @@ public class WorldMap implements IPositionChangeObserver {
                 else
                     maxNoOfWorldGrass++;
                 divideAndEat(rat);
-
             }
         }
+        System.out.println("end of moving");
 
 
         //-------------making new animals----------------
@@ -134,17 +135,22 @@ public class WorldMap implements IPositionChangeObserver {
 
         }
 
+        System.out.println("end of moving");
 
         //-------------------adding grass--------------------
+        System.out.println(jungle.maxNoOfJungleGrass);
             if(jungle.getMaxNoOfJungleGrass() >0){
             addJungleGrass();               //add grass to jungle
             jungle.setMaxNoOfJungleGrass(-1);
             }
+        System.out.println("end of grass1");
 
         if (maxNoOfWorldGrass >0){
             addWorldGrass();               //add grass not to jungle
             maxNoOfWorldGrass--;
         }
+        System.out.println("end of grass2");
+
 
     }
 
@@ -197,7 +203,7 @@ public class WorldMap implements IPositionChangeObserver {
             or.getRandom();
             place=place.add(or.toUniVector());
         }
-
+        wrapMap(place);
         return place;
     }
 
@@ -263,6 +269,7 @@ public class WorldMap implements IPositionChangeObserver {
         Vector2D randPos;
         do {
              randPos = new Vector2D((int) (jungle.leftDown.x + Math.random() * (jungle.rightUp.x - jungle.leftDown.x+1)), (int) (jungle.leftDown.y + Math.random() * (jungle.rightUp.y - jungle.leftDown.y+1)));
+        //System.out.println("grass"+randPos);
         }while(!(jungle.inJungle(randPos) && !isOccupied(randPos)));
 
         grassMap.put(randPos, new Grass(randPos, this.grassEnergy));
