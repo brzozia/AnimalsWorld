@@ -77,6 +77,12 @@ public class MultiMap<K, A> {
     public Set<Map.Entry<K, TreeSet<A>>> entrySet() {
         return map.entrySet();
     }
+    public boolean contains(K key, A val){
+        if(map.get(key) == null ||
+                !map.get(key).contains(val))
+            return false;
+        else return true;
+    }
 
 
 }

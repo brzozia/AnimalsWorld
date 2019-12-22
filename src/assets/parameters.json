@@ -6,5 +6,6 @@
   "plantEnergy": 2,
   "jungleRatio": 3,
   "daysOfSimulation": 15,
-  "noOfAnimals": 25
+  "noOfAnimals": 10
+
 }

@@ -68,7 +68,8 @@ public class WorldMap implements IPositionChangeObserver {
             animals.remove(soonDead);
 
         }
-        toKill.clear();
+        //toKill.clear();
+
 
         //-----------------running and rotating-------------
        // MultiMap<Vector2D, Animal > addMap = new MultiMap<>(this.compare);
@@ -82,8 +83,11 @@ public class WorldMap implements IPositionChangeObserver {
 
 
         for(Animal rat: animals ){
-            neverLandMap.add(rat.getPosition(), rat);
-        }
+            if( !neverLandMap.contains(rat.getPosition(), rat)) {
+                neverLandMap.add(rat.getPosition(), rat);
+                System.out.println("------------------------------------------------------agh-------------------------------------------");
+            }
+            }
 
         //----------------eating grass-------------------
         for(Animal rat: animals ){
