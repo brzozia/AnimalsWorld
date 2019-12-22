@@ -60,13 +60,14 @@ public class WorldMap implements IPositionChangeObserver {
         for(Animal rat: animals ){              // removing dead animals, but only from neverLand
             if(rat.getEnergy()<=0) {
 
-                neverLandMap.delete(rat.getPosition(), rat);
                 toKill.add(rat);
             }
         }
 
         for(Animal soonDead: toKill){           //kills animals from the list
             animals.remove(soonDead);
+            neverLandMap.delete(soonDead.getPosition(), soonDead);
+
 
         }
         toKill.clear();
@@ -77,17 +78,18 @@ public class WorldMap implements IPositionChangeObserver {
 
         for(Animal rat: animals ){
                 rat.rotate();                                   //changes orientation, moves and decreases energy
-                rat.decreaseEnergy(moveEnergy);
                 move(rat);
+            rat.decreaseEnergy(moveEnergy);
+
         }
 
 
 
-            for (Animal rat : animals) {
-                if (!neverLandMap.contains(rat.getPosition(), rat)) {
-                    neverLandMap.add(rat.getPosition(), rat);
-                }
-            }
+//            for (Animal rat : animals) {
+//                if (!neverLandMap.contains(rat.getPosition(), rat)) {
+//                    neverLandMap.add(rat.getPosition(), rat);
+//                }
+//            }
 
 
         //----------------eating grass-------------------
