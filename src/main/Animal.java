@@ -130,7 +130,7 @@ public class Animal {
                 do {
                     randGen = (int) (Math.random() * 31); //finds gen to change from genotype;
                 }
-                while(directionsInNewGenotype[randGen]<2); //if founded gen is the only gen of this type find another one
+                while(directionsInNewGenotype[(newGenotype [randGen])]<2); //if founded gen is the only gen of this type find another one
 
                 //we have a gen to change, so (k is a missing gen)
                 newGenotype[randGen]=k;

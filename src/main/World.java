@@ -33,7 +33,7 @@ public class World {
 
 
 
-            WorldMap earth =new WorldMap(width, height, jungleRatio);
+            WorldMap earth =new WorldMap(width, height, jungleRatio, plantEnergy);
 
             earth.placeRandomAnimals(noOfAnimals,startEnergy);
 
@@ -45,8 +45,6 @@ public class World {
                 for (Animal a : earth.animals) {
                     out.println(a.toStringAttributes());
                 }
-                System.out.println(earth.grassMap.toString());
-
             }
             System.out.println(earth.toString());
 
