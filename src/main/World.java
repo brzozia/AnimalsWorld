@@ -42,9 +42,9 @@ public class World {
                 System.out.println("                        today is day: "+i);
                 earth.daySimulation(moveEnergy, startEnergy);
                 System.out.println(earth.toString());
-//                for (Animal a : earth.animals) {
-//                    out.println(a.toStringAttributes());
-//                }
+                for (Animal a : earth.animals) {
+                    out.println(a.toStringAttributes());
+                }
             }
             //System.out.println(earth.toString());
 

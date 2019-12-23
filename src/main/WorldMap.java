@@ -13,7 +13,7 @@ public class WorldMap implements IPositionChangeObserver {
     private Vector2D worldLeftDown=new Vector2D(0,0);
     private Vector2D worldRightUp;
     private Jungle jungle;               //contains dimensions of jungle
-    private Comparator compare =Comparator.comparingDouble(Animal::getComparingValue);
+    private Comparator compare = new AnimalEnergyComparator();
     private MultiMap<Vector2D, Animal> neverLandMap = new MultiMap<>(this.compare);    //makes a MultiMap where keys are type Vector2D, and values are Animals and gives a comparator, which compares Animals (values) using Animals' energy
                                                                                                                                                     // neverLand in the name of my world, because I don't want to name my world 'myWorld' or 'wholeWorld' or anything else
     protected List<Animal> animals = new LinkedList<>();
