@@ -15,10 +15,7 @@ public class Animal {
     protected List<IPositionChangeObserver> observers = new LinkedList<>();
 
 
-
-
-
-    public Animal(Vector2D position, Orientation orientation, double energy, int[] genotype, Integer id) {
+    public Animal(Vector2D position, Orientation orientation, double energy, int[] genotype, int id) {
         this.position = position;
         this.orientation = orientation;
         this.energy = energy;
@@ -78,7 +75,7 @@ public class Animal {
             return true;
     }
 
-    public Animal reproduction(Animal rat, Vector2D placeToBorn, Integer newId){ //new means that it is for a new born animals' child
+    public Animal reproduction(Animal rat, Vector2D placeToBorn, int newId) { //new means that it is for a new born animals' child
 
         Orientation newOrientation = rat.orientation;
         newOrientation.getRandom(); //new super-random orientation
@@ -160,6 +157,6 @@ public class Animal {
     }
 
     public double getComparingValue(){
-        return this.energy + (double)this.id;
+        return this.energy * 3 + (double) this.id;
     }
 }

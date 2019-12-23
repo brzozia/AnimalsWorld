@@ -84,21 +84,16 @@ public class WorldMap implements IPositionChangeObserver {
         }
 
 
-
-//            for (Animal rat : animals) {
-//                if (!neverLandMap.contains(rat.getPosition(), rat)) {
-//                    neverLandMap.add(rat.getPosition(), rat);
-//                }
-//            }
+        for (Animal rat : animals) {
+            if (!neverLandMap.contains(rat.getPosition(), rat)) {
+                neverLandMap.add(rat.getPosition(), rat);
+            }
+        }
 
 
         //----------------eating grass-------------------
         for(Animal rat: animals ){
             if(objectAt(rat.getPosition()) instanceof Grass) {  //if animal stands at grass it can eat it
-                if(jungle.inJungle(rat.getPosition()))
-                    jungle.setMaxNoOfJungleGrass(1);
-                else
-                    maxNoOfWorldGrass++;
                 divideAndEat(rat);
             }
         }
@@ -136,12 +131,13 @@ public class WorldMap implements IPositionChangeObserver {
 
 
         //-------------------adding grass--------------------
-            if(jungle.getMaxNoOfJungleGrass() >1){
+
+        if (jungle.getMaxNoOfJungleGrass() > 0) {
             addJungleGrass();               //add grass to jungle
             jungle.setMaxNoOfJungleGrass(-1);
             }
 
-        if (maxNoOfWorldGrass >1){
+        if (maxNoOfWorldGrass > 0) {
             addWorldGrass();               //add grass not to jungle
             maxNoOfWorldGrass--;
         }
@@ -222,12 +218,19 @@ public class WorldMap implements IPositionChangeObserver {
 
                     }
                 }
-                grassMap.remove(animalPosition);
             }
             else if(neverLandMap.size(animalPosition)== 1){                             //he can also be not the strongest one but then the strongest animals will eat grass when it will be their turn
                 rat.eatingGrass(grassMap.get(animalPosition).getEnergy());
-                grassMap.remove(animalPosition);
             }
+
+
+        if (jungle.inJungle(animalPosition)) {
+            jungle.setMaxNoOfJungleGrass(1);
+        } else
+            maxNoOfWorldGrass++;
+
+        grassMap.remove(animalPosition);
+
 
 
     }
@@ -260,7 +263,7 @@ public class WorldMap implements IPositionChangeObserver {
         Vector2D randPos;
         do {
              randPos = new Vector2D((int) (jungle.leftDown.x + Math.random() * (jungle.rightUp.x - jungle.leftDown.x+1)), (int) (jungle.leftDown.y + Math.random() * (jungle.rightUp.y - jungle.leftDown.y+1)));
-        }while(!(jungle.inJungle(randPos) && !isOccupied(randPos)));
+        } while (!jungle.inJungle(randPos) || (objectAt(randPos) instanceof Grass));
 
         grassMap.put(randPos, new Grass(randPos, this.grassEnergy));
     }

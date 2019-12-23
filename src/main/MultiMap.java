@@ -15,6 +15,7 @@ public class MultiMap<K, A> {
     public void add(K key, A val){
 
         if(map.containsKey(key)) {
+            System.out.println(map.get(key).add(val) + "  " + key);
             map.get(key).add(val); //get returns TreeSet, into which animal is added
 
         }
