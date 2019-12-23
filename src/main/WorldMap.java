@@ -54,12 +54,13 @@ public class WorldMap implements IPositionChangeObserver {
 
 
     public void daySimulation(int moveEnergy, int startEnergy){
+
         //------------------killing animals---------------
 
         List<Animal> toKill =new LinkedList<>(); //list with animals to kill
         for(Animal rat: animals ){              // removing dead animals, but only from neverLand
             if(rat.getEnergy()<=0) {
-                toKill.add(rat);
+                System.out.println(toKill.add(rat));
             }
         }
 
@@ -79,15 +80,8 @@ public class WorldMap implements IPositionChangeObserver {
                 rat.rotate();                                   //changes orientation, moves and decreases energy
                 move(rat);
             rat.decreaseEnergy(moveEnergy);
-
         }
 
-//
-//        for (Animal rat : animals) {
-//            if (!neverLandMap.contains(rat.getPosition(), rat)) {
-//                neverLandMap.add(rat.getPosition(), rat);
-//            }
-//        }
 
 
         //----------------eating grass-------------------

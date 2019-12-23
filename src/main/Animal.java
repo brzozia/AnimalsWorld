@@ -159,4 +159,16 @@ public class Animal {
     public int getId() {
         return id;
     }
+
+    public boolean equals(Object o) {
+        try {
+            assert o instanceof Animal;
+        } catch (IllegalArgumentException ex) {
+            System.out.println(ex + " not an Animal");
+        }
+
+        return (this.getId()) == (((Animal) o).getId());
+
+    }
+
 }
