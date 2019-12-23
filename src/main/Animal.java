@@ -161,13 +161,13 @@ public class Animal {
     }
 
     public boolean equals(Object o) {
-        try {
-            assert o instanceof Animal;
-        } catch (IllegalArgumentException ex) {
-            System.out.println(ex + " not an Animal");
+        if (o instanceof Animal) {
+            return (this.getId()) == (((Animal) o).getId());
+
+        } else {
+            throw new IllegalArgumentException(" not an Animal");
         }
 
-        return (this.getId()) == (((Animal) o).getId());
 
     }
 
