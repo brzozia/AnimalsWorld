@@ -14,7 +14,7 @@ public class Grass {
     }
 
     public String toString(){
-        return " * ";
+        return "  *   ";
     }
 
 }

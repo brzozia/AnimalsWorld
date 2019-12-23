@@ -157,6 +157,6 @@ public class Animal {
     }
 
     public double getComparingValue(){
-        return this.energy * 3 + (double) this.id;
+        return (this.energy + (double) this.id * 7) / 7;
     }
 }

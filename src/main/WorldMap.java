@@ -59,7 +59,6 @@ public class WorldMap implements IPositionChangeObserver {
         List<Animal> toKill =new LinkedList<>(); //list with animals to kill
         for(Animal rat: animals ){              // removing dead animals, but only from neverLand
             if(rat.getEnergy()<=0) {
-
                 toKill.add(rat);
             }
         }
@@ -83,12 +82,12 @@ public class WorldMap implements IPositionChangeObserver {
 
         }
 
-
-        for (Animal rat : animals) {
-            if (!neverLandMap.contains(rat.getPosition(), rat)) {
-                neverLandMap.add(rat.getPosition(), rat);
-            }
-        }
+//
+//        for (Animal rat : animals) {
+//            if (!neverLandMap.contains(rat.getPosition(), rat)) {
+//                neverLandMap.add(rat.getPosition(), rat);
+//            }
+//        }
 
 
         //----------------eating grass-------------------
